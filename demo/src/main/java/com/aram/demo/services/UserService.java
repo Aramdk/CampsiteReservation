@@ -16,9 +16,4 @@ public class UserService implements IUserService {
     public User getUserByEmail(String email) {
         return (User) HibernateUtils.getEntityByProperty(User.class, "email", email);
     }
-
-    @Override
-    public void deleteUser(User user) {
-        HibernateUtils.deleteEntity(user);
-    }
 }

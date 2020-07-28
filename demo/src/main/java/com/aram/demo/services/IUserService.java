@@ -7,6 +7,4 @@ public interface IUserService {
     User addUser(User user);
 
     User getUserByEmail(String email);
-
-    void deleteUser(User user);
 }

@@ -26,7 +26,7 @@ public class ReservationService implements IReservationService {
     }
 
     @Override
-    public Reservation addReservation(Reservation reservation) {
+    public Reservation addOrUpdateReservation(Reservation reservation, boolean updateMode) {
         DateTime startDate = reservation.getReservationStartDate();
         DateTime endDate = reservation.getReservationEndDate();
 
@@ -49,12 +49,23 @@ public class ReservationService implements IReservationService {
 
         reservation.setReservationEndDate(endDate);
         reservation.setReservationStartDate(startDate);
-        return (Reservation) HibernateUtils.createEntity(reservation);
+
+        if (updateMode) {
+            HibernateUtils.updateEntity(reservation);
+            return reservation;
+        } else {
+
+            return (Reservation) HibernateUtils.createEntity(reservation);
+        }
     }
 
     @Override
     public Reservation getReservationByBookingId(String bookingId) {
-        return (Reservation) HibernateUtils.getEntityByProperty(Reservation.class, "bookingId", bookingId);
+        Object entity = HibernateUtils.getEntityByProperty(Reservation.class, "bookingId", bookingId);
+        if (entity == null) {
+            throw new RuntimeException("Invalid bookingId");
+        }
+        return (Reservation) entity;
     }
 
     @Override

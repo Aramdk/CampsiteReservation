@@ -38,6 +38,14 @@ public class HibernateUtils {
         return result;
     }
 
+    public static void updateEntity(Object entity) {
+        Session session = openSession(entity);
+
+        Transaction transaction = session.beginTransaction();
+        session.update(entity);
+        transaction.commit();
+    }
+
     public static void deleteEntity(Object entity) {
         Session session = openSession(entity);
 

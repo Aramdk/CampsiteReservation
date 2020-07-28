@@ -10,7 +10,7 @@ public interface IReservationService {
 
     void cancelReservation(Reservation reservation);
 
-    Reservation addReservation(Reservation reservation);
+    Reservation addOrUpdateReservation(Reservation reservation, boolean updateMode);
 
     Reservation getReservationByBookingId(String bookingId);
 

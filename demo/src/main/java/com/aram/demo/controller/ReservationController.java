@@ -7,6 +7,7 @@ import com.aram.demo.services.IReservationService;
 import com.aram.demo.services.IUserService;
 import com.aram.demo.services.ReservationService;
 import com.aram.demo.services.UserService;
+import com.aram.demo.utils.HibernateUtils;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -77,12 +78,34 @@ public class ReservationController {
             if (user == null) {
                 user = userService.addUser(new User(username, userEmail));
             }
-            response.setResponseBody(reservationService.addReservation(new Reservation(user, startDateTime, endDateTime)).toApiModel());
+            response.setResponseBody(reservationService.addOrUpdateReservation(new Reservation(user, startDateTime, endDateTime), false).toApiModel());
             response.setStatusCode(200);
         } catch (Exception e) {
             response.setStatusCode(400);
             response.setErrorMessage(e.getMessage());
         }
+        lock.unlock();
+        return response;
+    }
+
+    @RequestMapping(value = "/reservation", method = RequestMethod.PUT)
+    public ObjectResponse updateReservation(String bookingId, String startDate, String endDate) {
+        lock.lock();
+        ObjectResponse response = new ObjectResponse();
+
+        try {
+            DateTime startDateTime = DateTime.parse(startDate, DateTimeFormat.forPattern("yyyy/MM/dd"));
+            DateTime endDateTime = DateTime.parse(endDate, DateTimeFormat.forPattern("yyyy/MM/dd"));
+            Reservation reservation = reservationService.getReservationByBookingId(bookingId);
+            reservation.setReservationStartDate(startDateTime);
+            reservation.setReservationEndDate(endDateTime);
+            response.setResponseBody(reservationService.addOrUpdateReservation(reservation, true).toApiModel());
+            response.setStatusCode(200);
+        } catch (Exception e) {
+            response.setStatusCode(400);
+            response.setErrorMessage(e.getMessage());
+        }
+
         lock.unlock();
         return response;
     }
