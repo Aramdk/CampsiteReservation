@@ -7,7 +7,6 @@ import com.aram.demo.services.IReservationService;
 import com.aram.demo.services.IUserService;
 import com.aram.demo.services.ReservationService;
 import com.aram.demo.services.UserService;
-import com.aram.demo.utils.HibernateUtils;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.springframework.web.bind.annotation.RequestMapping;
