@@ -13,7 +13,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.concurrent.locks.ReentrantLock;
 
 @RestController
@@ -41,7 +43,15 @@ public class ReservationController {
             if (endDate == null) {
                 endDateTime = startDateTime.plusMonths(1);
             }
-            response.setResponseBody(reservationService.getReservations(startDateTime, endDateTime));
+
+            List<Reservation> reservationList = reservationService.getReservations(startDateTime, endDateTime);
+
+            List<Reservation.ReservationApiModel> reservationApiModelList = new ArrayList<>();
+            for (Reservation reservation: reservationList) {
+                reservationApiModelList.add(reservation.toApiModel());
+            }
+
+            response.setResponseBody(reservationApiModelList);
             response.setStatusCode(200);
         } catch (Exception e) {
             response.setStatusCode(400);
