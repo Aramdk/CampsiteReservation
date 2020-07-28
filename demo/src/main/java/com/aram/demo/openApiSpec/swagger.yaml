@@ -1,0 +1,30 @@
+openapi: 3.0.0
+info:
+  title: Campsite reservation API
+  version: 0.1.9
+servers:
+  - url: http://localhost:8080
+    description: Campsite Reservation demo localhost server
+paths:
+  /helloworld:
+    get:
+      summary: Returns helloworld.
+      description: this is my description for helloworld
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: string
+  /test:
+    get:
+      summary: Returns something else.
+      description: this is my description for test
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: string
