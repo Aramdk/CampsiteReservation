@@ -45,6 +45,10 @@ public class ReservationService implements IReservationService {
             throw new RuntimeException("Reservations longer than 3 days are not currently supported.");
         } else if (!otherReservations.isEmpty()) {
             throw new RuntimeException("At least one of the selected days is not available.");
+        } else if (startDate.isBefore(DateTime.now().plusDays(1))) {
+            throw new RuntimeException("Invalid date. Unable to make reservations for past days or within the next 24 hours");
+        } else if (endDate.isAfter(DateTime.now().plusMonths(1))) {
+            throw new RuntimeException("Invalid date. Unable to make reservations for days further than a month away");
         }
 
         reservation.setReservationEndDate(endDate);
