@@ -24,18 +24,14 @@ public class ReservationController {
 
     IUserService userService = new UserService();
     IReservationService reservationService = new ReservationService();
-    ReentrantLock lock = new ReentrantLock();
 
     @RequestMapping(value = "/reservation", method = RequestMethod.DELETE)
     public void cancelReservation(String bookingId) {
-        lock.lock();
         reservationService.cancelReservation(reservationService.getReservationByBookingId(bookingId));
-        lock.unlock();
     }
 
     @RequestMapping(value = "/reservations", method = RequestMethod.GET)
     public ObjectResponse getReservations(Date startDate, Date endDate) {
-        lock.lock();
         ObjectResponse response = new ObjectResponse();
         try {
             DateTime startDateTime = new DateTime(startDate);
@@ -57,13 +53,11 @@ public class ReservationController {
             response.setStatusCode(400);
             response.setErrorMessage(e.getMessage());
         }
-        lock.unlock();
         return response;
     }
 
     @RequestMapping(value = "/reservation", method = RequestMethod.GET)
     public ObjectResponse getReservation(String bookingId) {
-        lock.lock();
         ObjectResponse response = new ObjectResponse();
         try {
              response.setResponseBody(reservationService.getReservationByBookingId(bookingId).toApiModel());
@@ -72,13 +66,11 @@ public class ReservationController {
             response.setStatusCode(400);
             response.setErrorMessage(e.getMessage());
         }
-        lock.unlock();
         return response;
     }
 
     @RequestMapping(value = "/reservation", method = RequestMethod.POST)
     public ObjectResponse addReservation(String username, String userEmail, String startDate, String endDate) {
-        lock.lock();
         ObjectResponse response = new ObjectResponse();
         DateTime startDateTime = DateTime.parse(startDate, DateTimeFormat.forPattern("yyyy/MM/dd"));
         DateTime endDateTime = DateTime.parse(endDate, DateTimeFormat.forPattern("yyyy/MM/dd"));
@@ -93,13 +85,11 @@ public class ReservationController {
             response.setStatusCode(400);
             response.setErrorMessage(e.getMessage());
         }
-        lock.unlock();
         return response;
     }
 
     @RequestMapping(value = "/reservation", method = RequestMethod.PUT)
     public ObjectResponse updateReservation(String bookingId, String startDate, String endDate) {
-        lock.lock();
         ObjectResponse response = new ObjectResponse();
 
         try {
@@ -115,13 +105,11 @@ public class ReservationController {
             response.setErrorMessage(e.getMessage());
         }
 
-        lock.unlock();
         return response;
     }
 
     @RequestMapping(value = "/available-dates", method = RequestMethod.GET)
     public ObjectResponse getAvailableDates(Date startDate, Date endDate) {
-        lock.lock();
         ObjectResponse response = new ObjectResponse();
         DateTime startDateTime = new DateTime(startDate);
         DateTime endDateTime = new DateTime(endDate);
@@ -135,7 +123,6 @@ public class ReservationController {
             response.setStatusCode(400);
             response.setErrorMessage(e.getMessage());
         }
-        lock.unlock();
         return response;
     }
 }

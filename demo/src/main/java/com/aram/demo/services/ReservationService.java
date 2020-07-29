@@ -10,23 +10,23 @@ import org.joda.time.format.DateTimeFormat;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.locks.ReentrantLock;
 
 @Singleton
 public class ReservationService implements IReservationService {
     private final int maximumReservationDays = 3;
-
-    @Override
-    public boolean validateCampsiteAvailability(DateTime reservationStartDate, int reservationDuration) {
-        return false;
-    }
+    ReentrantLock lock = new ReentrantLock();
 
     @Override
     public void cancelReservation(Reservation reservation) {
+        lock.lock();
         HibernateUtils.deleteEntity(reservation);
+        lock.unlock();
     }
 
     @Override
     public Reservation addOrUpdateReservation(Reservation reservation, boolean updateMode) {
+        lock.lock();
         DateTime startDate = reservation.getReservationStartDate();
         DateTime endDate = reservation.getReservationEndDate();
 
@@ -56,9 +56,10 @@ public class ReservationService implements IReservationService {
 
         if (updateMode) {
             HibernateUtils.updateEntity(reservation);
+            lock.unlock();
             return reservation;
         } else {
-
+            lock.unlock();
             return (Reservation) HibernateUtils.createEntity(reservation);
         }
     }

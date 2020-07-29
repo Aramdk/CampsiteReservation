@@ -6,8 +6,6 @@ import org.joda.time.DateTime;
 import java.util.List;
 
 public interface IReservationService {
-    boolean validateCampsiteAvailability(DateTime reservationStartDate, int reservationDuration);
-
     void cancelReservation(Reservation reservation);
 
     Reservation addOrUpdateReservation(Reservation reservation, boolean updateMode);
